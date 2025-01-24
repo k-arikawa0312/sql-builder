@@ -8,7 +8,7 @@ import InsertBuilder from "./InsertBuilder";
 import CreateTableBuilder from "./CreateTableBuilder";
 import SqlPreview from "./SqlPreview";
 import UpdateBuilder from "./UpdateBuilder";
-import { QueryConfig, QueryType } from "../types/types";
+import { ColumnWithCount, QueryConfig, QueryType } from "../types/types";
 
 const SAMPLE_TABLES = [
   {
@@ -41,9 +41,21 @@ const INITIAL_STATE: QueryConfig = {
 
 export default function QueryBuilder() {
   const [queryConfig, setQueryConfig] = useState<QueryConfig>(INITIAL_STATE);
+  const [isCountData, setIsCountData] = useState<boolean>(true);
+
   const handleQueryTypeChange = (queryType: QueryType) => {
-    setQueryConfig({ ...INITIAL_STATE, queryType });
+    console.log(isCountData)
+    setQueryConfig({ ...INITIAL_STATE, queryType, isCountData });
   };
+  
+  const handleCountChange = (count: boolean) => {
+    setQueryConfig((prev) => ({ ...prev, countData: count }));
+  };
+
+  const handleColumnSelect = (columns: ColumnWithCount[]) => {
+    setQueryConfig((prev) => ({ ...prev, selectedColumns: columns }));
+  };
+
   return (
     <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">
@@ -67,6 +79,15 @@ export default function QueryBuilder() {
           <>
             {queryConfig.queryType === "SELECT" && (
               <>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={isCountData}
+                    onChange={(event) => handleCountChange(event.target.checked)}
+                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label className="ml-2 block text-sm text-gray-900">カウントを取得</label>
+                </div>
                 <ColumnSelector
                   table={
                     SAMPLE_TABLES.find(
@@ -74,12 +95,7 @@ export default function QueryBuilder() {
                     )!
                   }
                   selectedColumns={queryConfig.selectedColumns}
-                  onSelect={(columns) =>
-                    setQueryConfig((prev) => ({
-                      ...prev,
-                      selectedColumns: columns,
-                    }))
-                  }
+                  onSelect={handleColumnSelect}
                 />
                 <ConditionBuilder
                   table={

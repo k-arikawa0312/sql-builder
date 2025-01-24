@@ -36,6 +36,11 @@ export interface CreateTableColumn {
   referenceColumn?: string;
 }
 
+export interface ColumnWithCount {
+  name: string;
+  count: boolean;
+}
+
 export type QueryType =
   | "SELECT"
   | "INSERT"
@@ -46,9 +51,10 @@ export type QueryType =
 export interface QueryConfig {
   queryType: QueryType;
   selectedTable: string;
-  selectedColumns: string[];
+  selectedColumns: ColumnWithCount[];
   conditions: Condition[];
   insertValues: InsertValue[];
   updateValues: UpdateValue[];
   createTableColumns: CreateTableColumn[];
+  isCountData?: boolean;
 }

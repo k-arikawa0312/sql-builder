@@ -26,11 +26,21 @@ export default function SqlPreview({ queryConfig }: Props): ReactElement {
 
   const generateSelectSql = () => {
     if (!queryConfig.selectedTable) return "";
-    const columns =
-      queryConfig.selectedColumns.length > 0
-        ? queryConfig.selectedColumns.join(", ")
-        : "*";
+
+    let columns: string;
+
+    if (queryConfig.selectedColumns.some(col => col.count)) {
+      columns = queryConfig.selectedColumns
+        .map(col => (col.count ? `COUNT(${col.name})` : col.name))
+        .join(", ");
+    } else if (queryConfig.selectedColumns.length > 0) {
+      columns = queryConfig.selectedColumns.map(col => col.name).join(", ");
+    } else {
+      columns = "*";
+    }
+
     let sql = `SELECT ${columns}\nFROM ${queryConfig.selectedTable}`;
+    
     if (queryConfig.conditions.length > 0) {
       const whereClause = queryConfig.conditions
         .filter((c) => c.column && c.operator && c.value)
@@ -40,6 +50,7 @@ export default function SqlPreview({ queryConfig }: Props): ReactElement {
         sql += "\nWHERE " + whereClause;
       }
     }
+    
     return sql + ";";
   };
 
