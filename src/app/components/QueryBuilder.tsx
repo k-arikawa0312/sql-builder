@@ -79,15 +79,6 @@ export default function QueryBuilder() {
           <>
             {queryConfig.queryType === "SELECT" && (
               <>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={isCountData}
-                    onChange={(event) => handleCountChange(event.target.checked)}
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                  />
-                  <label className="ml-2 block text-sm text-gray-900">カウントを取得</label>
-                </div>
                 <ColumnSelector
                   table={
                     SAMPLE_TABLES.find(
