@@ -28,10 +28,18 @@ export default function SqlPreview({ queryConfig }: Props): ReactElement {
     if (!queryConfig.selectedTable) return "";
 
     let columns: string;
+    const groupByColumns: string[] = [];
 
     if (queryConfig.selectedColumns.some(col => col.count)) {
       columns = queryConfig.selectedColumns
-        .map(col => (col.count ? `COUNT(${col.name})` : col.name))
+        .map(col => {
+          if (col.count) {
+            return `COUNT(${col.name})`;
+          } else {
+            groupByColumns.push(col.name);
+            return col.name;
+          }
+        })
         .join(", ");
     } else if (queryConfig.selectedColumns.length > 0) {
       columns = queryConfig.selectedColumns.map(col => col.name).join(", ");
@@ -49,6 +57,14 @@ export default function SqlPreview({ queryConfig }: Props): ReactElement {
       if (whereClause) {
         sql += "\nWHERE " + whereClause;
       }
+    }
+
+    if (groupByColumns.length > 0) {
+      sql += `\nGROUP BY ${groupByColumns.join(", ")}`;
+    }
+
+    if (queryConfig.selectedColumns.some(col => col.count)) {
+      sql += `\nHAVING COUNT(*) > 0`;
     }
     
     return sql + ";";
