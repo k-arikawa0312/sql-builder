@@ -59,13 +59,7 @@ export default function SqlPreview({ queryConfig }: Props): ReactElement {
       }
     }
 
-    if (groupByColumns.length > 0) {
-      sql += `\nGROUP BY ${groupByColumns.join(", ")}`;
-    }
-
-    if (queryConfig.selectedColumns.some(col => col.count)) {
-      sql += `\nHAVING COUNT(*) > 0`;
-    }
+  
     
     return sql + ";";
   };

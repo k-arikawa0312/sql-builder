@@ -11,6 +11,7 @@ export default function QueryTypeSelector({ selectedType, onSelect }: Props) {
     { value: "UPDATE", label: "更新" },
     { value: "DELETE", label: "削除" },
     { value: "CREATE_TABLE", label: "テーブル作成" },
+
   ];
   return (
     <div className="space-y-2">
