@@ -41,12 +41,8 @@ export interface ColumnWithCount {
   count: boolean;
 }
 
-export type QueryType =
-  | "SELECT"
-  | "INSERT"
-  | "UPDATE"
-  | "DELETE"
-  | "CREATE_TABLE";
+export type CustomType = "SELECT" | "INSERT" | "UPDATE" | "DELETE";
+export type QueryType = CustomType | "CREATE_TABLE" | "CUSTOM";
 
 export interface QueryConfig {
   queryType: QueryType;
@@ -57,4 +53,10 @@ export interface QueryConfig {
   updateValues: UpdateValue[];
   createTableColumns: CreateTableColumn[];
   isCountData?: boolean;
+}
+
+export interface CustomConfig {
+  name: string;
+  column: string;
+  query: CustomType;
 }

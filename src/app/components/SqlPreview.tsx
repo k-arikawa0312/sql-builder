@@ -1,12 +1,13 @@
 "use client";
-import { QueryConfig } from "../types/types";
+import { QueryConfig, CustomConfig } from "../types/types";
 import { ReactElement } from "react";
 
 interface Props {
   queryConfig: QueryConfig;
+  customConfig?: CustomConfig;
 }
 
-export default function SqlPreview({ queryConfig }: Props): ReactElement {
+export default function SqlPreview({ queryConfig, customConfig }: Props): ReactElement {
   const generateSql = () => {
     switch (queryConfig.queryType) {
       case "SELECT":
@@ -19,6 +20,8 @@ export default function SqlPreview({ queryConfig }: Props): ReactElement {
         return generateDeleteSql();
       case "CREATE_TABLE":
         return generateCreateTableSql();
+      case "CUSTOM":
+        return generateCustomSql()
       default:
         return "";
     }
@@ -154,6 +157,12 @@ export default function SqlPreview({ queryConfig }: Props): ReactElement {
     console.log("Generated SQL:", sql);
     return sql;
   };
+
+  const generateCustomSql = () =>{
+    if (customConfig === undefined) return ""
+    const sql = `${customConfig.query} \n ${customConfig.name}`
+    return sql
+  }
 
   return (
     <div className="space-y-2">
